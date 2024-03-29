@@ -1,20 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import "react-native-gesture-handler";
 
-export default function App() {
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
+import { Platform, SafeAreaView, StatusBar } from "react-native";
+import Home from "./screens/Home";
+import Profile from "./screens/Profile";
+
+const App = () => {
+  const Drawer = createDrawerNavigator();
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      }}
+    >
+      <NavigationContainer>
+        <Drawer.Navigator>
+          <Drawer.Screen
+            name="მთავარი"
+            component={Home}
+            options={{ headerShown: false, headerTintColor: "white" }}
+          />
+          <Drawer.Screen name="პროფილი" component={Profile} />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
