@@ -1,16 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
+  FlatList,
+  Image,
+  Pressable,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
-  FlatList,
-  Text,
-  Image,
 } from "react-native";
 import EntypoIcons from "react-native-vector-icons/Entypo";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
 import HttpRequests from "../httpRequests/httpRequests";
 
 const httpRequests = new HttpRequests();
@@ -38,6 +40,7 @@ const Home = () => {
       style={{
         flex: 1,
         backgroundColor: "white",
+        position: "relative",
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
@@ -56,7 +59,11 @@ const Home = () => {
             justifyContent: "center",
           }}
         >
-          <TextInput style={styles.mySearch} placeholder="მოძებნე პროდუქტი" />
+          <TextInput
+            style={styles.mySearch}
+            placeholder="მოძებნე პროდუქტი"
+            onChangeText={(text) => setSearchText(text)}
+          />
           <Ionicons
             name="search"
             size={20}
@@ -66,39 +73,76 @@ const Home = () => {
         </View>
       </View>
       <FlatList
-        data={products}
+        data={products.filter((product) =>
+          product?.title
+            ?.toLocaleLowerCase()
+            ?.includes(searchText?.toLocaleLowerCase())
+        )}
         keyExtractor={(item) => item.id}
         style={{ paddingHorizontal: 20, paddingTop: 20 }}
         renderItem={({ item }) => (
-          <View
-            style={{
-              marginBottom: 30,
-              position: "relative",
+          <Pressable
+            onPress={() => {
+              navigation.navigate("ProductDetails", { product: item });
             }}
           >
-            <Image
-              source={{
-                uri: item.thumbnail,
-              }}
-              style={{ width: "100%", height: 300, borderRadius: 8 }}
-            />
             <View
               style={{
-                position: "absolute",
-                left: 0,
-                backgroundColor: "black",
-                padding: 10,
-                borderRadius: 8,
+                marginBottom: 30,
+                position: "relative",
               }}
             >
-              <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
-              <Text style={{ color: "white", fontSize: 18 }}>
-                ფასი - {item.price}ლ
-              </Text>
+              <Image
+                source={{
+                  uri: item.thumbnail,
+                }}
+                style={{ width: "100%", height: 300, borderRadius: 8 }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  backgroundColor: "black",
+                  padding: 10,
+                  borderRadius: 8,
+                }}
+              >
+                <Text style={{ color: "white", fontSize: 22 }}>
+                  {item.title}
+                </Text>
+                <Text style={{ color: "white", fontSize: 18 }}>
+                  ფასი - {item.price}ლ
+                </Text>
+              </View>
             </View>
-          </View>
+          </Pressable>
         )}
       />
+
+      <View style={{ position: "absolute", right: 20, bottom: 40 }}>
+        <TouchableOpacity
+          style={{
+            borderRadius: 35,
+            width: 70,
+            height: 70,
+            backgroundColor: "orange",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+
+            elevation: 5,
+
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <FontAwesomeIcons name="shopping-cart" size={35} color="white" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

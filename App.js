@@ -12,8 +12,9 @@ import CustomDrawer from "./components/CustomDrawer";
 import Home from "./screens/Home";
 import Profile from "./screens/Profile";
 import Settings from "./screens/Settings";
+import ProductDetails from "./components/ProductDetails";
 
-axios.defaults.baseURL = 'https://dummyjson.com/';
+axios.defaults.baseURL = "https://dummyjson.com/";
 
 const App = () => {
   const Drawer = createDrawerNavigator();
@@ -33,7 +34,6 @@ const App = () => {
           }}
           drawerContent={(props) => <CustomDrawer {...props} />}
         >
-
           <Drawer.Screen
             name="მთავარი"
             component={Home}
@@ -70,6 +70,16 @@ const App = () => {
               ),
               drawerLabelStyle: { marginLeft: -20 },
             }}
+          />
+
+          <Drawer.Screen
+            name="ProductDetails"
+            component={ProductDetails}
+            options={{
+              drawerItemStyle: { display: 'none' }
+            }}
+
+            // options={{ DrawerItemStyle: { display: "none" } }}
           />
         </Drawer.Navigator>
       </NavigationContainer>
