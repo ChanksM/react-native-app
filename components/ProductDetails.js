@@ -1,13 +1,21 @@
 import { useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch } from "react-redux";
+import { setToCart } from "../localStore/localStore";
 
 const ProductDetails = (props) => {
   const route = useRoute();
 
   const [amount, setAmount] = useState(1);
 
-  console.log("route?", route.params);
+  const dispatch = useDispatch();
+
+  const addToCart = () => {
+    const productInfo = {...route.params.product, amount};
+    dispatch(setToCart(productInfo));
+  }
+
   return (
     <ScrollView>
       <View
@@ -122,6 +130,9 @@ const ProductDetails = (props) => {
             marginLeft: "auto",
             marginRight: "auto",
             borderRadius: 10,
+          }}
+          onPress={() => {
+            addToCart();
           }}
         >
             <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>Add To Cart</Text>

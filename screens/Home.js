@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import * as Notifications from 'expo-notifications';
 import { useEffect, useState } from "react";
 import {
   FlatList,
@@ -11,9 +12,11 @@ import {
   View,
 } from "react-native";
 import EntypoIcons from "react-native-vector-icons/Entypo";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useSelector } from "react-redux";
 import HttpRequests from "../httpRequests/httpRequests";
+import { getFromCart } from "../localStore/localStore";
 
 const httpRequests = new HttpRequests();
 
@@ -21,11 +24,11 @@ const Home = () => {
   const [searchText, setSearchText] = useState("");
   const [products, setProducts] = useState([]);
 
+  const cartItems = useSelector(getFromCart);
   useEffect(() => {
     httpRequests
       .getProducts()
       .then((response) => {
-        console.log("response? ", response.data.products.length);
         setProducts(response.data.products);
       })
       .catch((error) => {
@@ -139,7 +142,38 @@ const Home = () => {
             justifyContent: "center",
             alignItems: "center",
           }}
+
+          onPress={() => {
+            Notifications.scheduleNotificationAsync({
+              content: {
+                title: 'Look at that notification',
+                body: "I'm so proud of myself!",
+              },
+              trigger: null,
+            });
+          }}
         >
+          {cartItems.length > 0 && (
+            <View
+              style={{
+                position: "absolute",
+                left: -2.5,
+                top: -2.5,
+                backgroundColor: "red",
+                width: 25,
+                height: 25,
+                borderRadius: 12.5,
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 1,
+              }}
+            >
+              <Text style={{ color: "white", fontWeight: "bold" }}>
+                {cartItems?.length }
+              </Text>
+            </View>
+          )}
+
           <FontAwesomeIcons name="shopping-cart" size={35} color="white" />
         </TouchableOpacity>
       </View>
